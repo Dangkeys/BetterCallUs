@@ -5,11 +5,37 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance {get; private set;}
+    private void Awake() {
+        if(Instance == null)
+        {
+            Instance = this;
+        }else
+        {
+            Debug.Log("Error meow meow");
+        }
+    }
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private GameInput gameInput;
 
     public bool IsWalking { get; private set; }
     private Vector3 lastInteractDir;
+    private ClearCounter selectedCounter;
+
+    private void Start()
+    {
+        gameInput.OnInteractAction += GameInputOnInteractAction;
+    }
+    private void GameInputOnInteractAction(object sender, System.EventArgs e)
+    {
+        if (selectedCounter == null) return;
+        selectedCounter.Interact();
+    }
 
     private void Update()
     {
@@ -22,19 +48,37 @@ public class Player : MonoBehaviour
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y).normalized;
         float interactDistance = 2f;
-        if(moveDir != Vector3.zero)
+        if (moveDir != Vector3.zero)
             lastInteractDir = moveDir;
-        if(Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance))
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance))
         {
-            if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-                clearCounter.Interact();
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                if (selectedCounter != clearCounter)
+                {
+                    SetSelectedCounter(clearCounter);     
+                }
+            }
             else
-                Debug.Log("Not clear counter");
+            {
+                SetSelectedCounter(null);
+            }
+
         }
         else
-            Debug.Log("-");
+        {
+            SetSelectedCounter(null);
+        }
+        Debug.Log(selectedCounter);
     }
-
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+        {
+            selectedCounter = selectedCounter
+        });
+    }
     private void HandleMovement()
     {
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
@@ -59,7 +103,6 @@ public class Player : MonoBehaviour
     private bool TryMove(Vector3 position, Vector3 direction, float radius, float height, float distance)
     {
         bool hit = Physics.CapsuleCast(position, position + Vector3.up * height, radius, direction, out RaycastHit hitInfo, distance);
-
         return !hit;
     }
 
