@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8463223625057409956}
+  - component: {fileID: -8050309081456974045}
   m_Layer: 0
   m_Name: Cabbage
   m_TagString: Untagged
@@ -32,6 +33,19 @@ Transform:
   - {fileID: 7109294412547932310}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8050309081456974045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4492749911781317628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bb7ccdd0830895419ef96190cecb4f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kitchenObjectSO: {fileID: 0}
 --- !u!1001 &6215889507815675414
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -3,14 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
-    public static Player Instance {get; private set;}
-    private void Awake() {
-        if(Instance == null)
+    [SerializeField] private Transform kitchenObjectHoldPoint;
+    private KitchenObject kitchenObject;
+    public static Player Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance == null)
         {
             Instance = this;
-        }else
+        }
+        else
         {
             Debug.Log("Error meow meow");
         }
@@ -34,7 +38,7 @@ public class Player : MonoBehaviour
     private void GameInputOnInteractAction(object sender, System.EventArgs e)
     {
         if (selectedCounter == null) return;
-        selectedCounter.Interact();
+        selectedCounter.Interact(this);
     }
 
     private void Update()
@@ -56,7 +60,7 @@ public class Player : MonoBehaviour
             {
                 if (selectedCounter != clearCounter)
                 {
-                    SetSelectedCounter(clearCounter);     
+                    SetSelectedCounter(clearCounter);
                 }
             }
             else
@@ -69,7 +73,7 @@ public class Player : MonoBehaviour
         {
             SetSelectedCounter(null);
         }
-        Debug.Log(selectedCounter);
+        // Debug.Log(selectedCounter);
     }
     private void SetSelectedCounter(ClearCounter selectedCounter)
     {
@@ -121,4 +125,24 @@ public class Player : MonoBehaviour
 
     }
 
+    public Transform GetKitchenObjectFollowTransform()
+    {
+        return kitchenObjectHoldPoint;
+    }
+    public void SetKitchenObject(KitchenObject kitchenObject)
+    {
+        this.kitchenObject = kitchenObject;
+    }
+    public KitchenObject GetKitchenObject()
+    {
+        return kitchenObject;
+    }
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+    public bool HasKitchenObject()
+    {
+        return kitchenObject != null;
+    }
 }

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8060102779060572470}
+  - component: {fileID: 2066299744061718637}
   m_Layer: 0
   m_Name: MeatPattyUnCooked
   m_TagString: Untagged
@@ -32,6 +33,19 @@ Transform:
   - {fileID: 3332068175091704748}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2066299744061718637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143946393380339108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bb7ccdd0830895419ef96190cecb4f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kitchenObjectSO: {fileID: 0}
 --- !u!1001 &1934275505251497260
 PrefabInstance:
   m_ObjectHideFlags: 0

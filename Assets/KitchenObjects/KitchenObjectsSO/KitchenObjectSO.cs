@@ -6,7 +6,20 @@ using UnityEngine;
 [CreateAssetMenu]
 public class KitchenObjectSO : ScriptableObject
 {
-    public Transform prefab;
-    public Sprite sprite;
-    public string objectName;
+    [Header("References")]
+    [SerializeField] private  Transform prefab;
+    [SerializeField] private Sprite sprite;
+    [SerializeField] private string objectName;
+    public Transform GetPrefabTransform()
+    {
+        return prefab;
+    }
+    public Sprite GetSprite()
+    {
+        return sprite;
+    }
+    public string GetObjectName()
+    {
+        return objectName;
+    }
 }
