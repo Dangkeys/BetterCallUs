@@ -5,8 +5,18 @@ using UnityEngine;
 public class KitchenObject : MonoBehaviour
 {
     // Start is called before the first frame update
+    public int CuttingProgress { get; private set; }
+
     [SerializeField] KitchenObjectSO kitchenObjectSO;
     private IKitchenObjectParent kitchenObjectParent;
+    public void IncrementCuttingProgress()
+    {
+        CuttingProgress++;
+        Debug.Log(CuttingProgress);
+    }
+
+
+
     public KitchenObjectSO GetKitchenObjectSO()
     {
         return kitchenObjectSO;
@@ -43,4 +53,5 @@ public class KitchenObject : MonoBehaviour
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
         return kitchenObject;
     }
+
 }
