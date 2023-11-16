@@ -16,7 +16,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
         if (HasKitchenObject())
         {
             if (player.HasKitchenObject())
-                TryHandleWhenPlayerHoldPlate(player);
+                TryHandlePlate(player);
             else
                 GetKitchenObject().SetKitchenObjectParent(player);
             OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs

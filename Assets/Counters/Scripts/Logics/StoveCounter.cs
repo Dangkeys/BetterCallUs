@@ -89,7 +89,7 @@ public class StoveCounter : BaseCounter, IHasProgress
     {
         if (HasKitchenObject())
         {
-            if (!TryHandleWhenPlayerHoldPlate(player) || state == State.Idle || state == State.Frying) return;
+            if (!TryHandlePlate(player) || state == State.Idle || state == State.Frying) return;
             
             state = State.Idle;
             OnStateChanged?.Invoke(this, new OnStateChangedEventArgs

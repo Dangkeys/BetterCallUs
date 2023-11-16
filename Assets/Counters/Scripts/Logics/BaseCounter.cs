@@ -10,19 +10,25 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     {
         Debug.LogError("BaseCounter.Interact()");
     }
-    private bool DoesPlayerHoldPlate(Player player)
+    public bool TryHandlePlate(Player player)
     {
-        return player.GetKitchenObject() is PlateKitchenObject;
-    }
-    public bool TryHandleWhenPlayerHoldPlate(Player player)
-    {
-        if (DoesPlayerHoldPlate(player))
+        if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
         {
-            PlateKitchenObject plateKitchenObject = player.GetKitchenObject() as PlateKitchenObject;
             if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
             {
                 GetKitchenObject().DestroySelf();
                 return true;
+            }
+        }
+        else
+        {
+            if (GetKitchenObject().TryGetPlate(out plateKitchenObject))
+            {
+                if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
+                {
+                    player.GetKitchenObject().DestroySelf();
+                    return true;
+                }
             }
         }
         return false;

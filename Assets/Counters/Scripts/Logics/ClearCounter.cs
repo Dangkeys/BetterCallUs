@@ -10,9 +10,12 @@ public class ClearCounter : BaseCounter
     {
         if(HasKitchenObject())
         {
-            TryHandleWhenPlayerHoldPlate(player);
-            if(player.HasKitchenObject()) return;
-            GetKitchenObject().SetKitchenObjectParent(player);
+            if(player.HasKitchenObject())
+            {
+                TryHandlePlate(player);
+            }
+            else
+                GetKitchenObject().SetKitchenObjectParent(player);
         }else{
             if(!player.HasKitchenObject()) return;
             player.GetKitchenObject().SetKitchenObjectParent(this);
