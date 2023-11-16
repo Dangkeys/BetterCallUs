@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class StoveCounterVisual : MonoBehaviour
 {
+    
     [SerializeField] StoveCounter stoveCounter;
     [SerializeField] GameObject[] gameObjectVFXs;
     private void Start() {
-        stoveCounter.OnStateChanged += (object sender, StoveCounter.OnStateChangedEventArgs e) => {Debug.Log("please");};
         stoveCounter.OnStateChanged += ShowVFXs;
     }
 

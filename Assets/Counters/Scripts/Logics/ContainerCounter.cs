@@ -11,6 +11,7 @@ public class ContainerCounter : BaseCounter
     {
         if (HasKitchenObject())
         {
+            TryHandleWhenPlayerHoldPlate(player);
             if (player.HasKitchenObject()) return;
             GetKitchenObject().SetKitchenObjectParent(player);
         }

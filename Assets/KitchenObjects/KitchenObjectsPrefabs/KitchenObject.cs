@@ -5,16 +5,48 @@ using UnityEngine;
 public class KitchenObject : MonoBehaviour
 {
     // Start is called before the first frame update
+
+    //the code below need to refactor
     public int CuttingProgress { get; private set; }
+    public float FryingTimer { get; private set; }
+    public float BurningTimer { get; private set; }
+    //the upper code need to refactor
 
     [SerializeField] KitchenObjectSO kitchenObjectSO;
     private IKitchenObjectParent kitchenObjectParent;
     public void IncrementCuttingProgress()
     {
         CuttingProgress++;
-        Debug.Log(CuttingProgress);
     }
-
+    public void IncrementFryingTimer(float deltaTime)
+    {
+        FryingTimer += deltaTime;
+    }
+    public void IncrementBurningTimer(float deltaTime)
+    {
+        BurningTimer += deltaTime;
+    }
+    public void ClearFryingTimer()
+    {
+        FryingTimer = 0;
+    }
+    public void ClearBurningTimer()
+    {
+        BurningTimer = 0;
+    }
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
+    {
+        if (this is PlateKitchenObject)
+        {
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        }
+        else
+        {
+            plateKitchenObject = null;
+            return false;
+        }
+    }
 
 
     public KitchenObjectSO GetKitchenObjectSO()
