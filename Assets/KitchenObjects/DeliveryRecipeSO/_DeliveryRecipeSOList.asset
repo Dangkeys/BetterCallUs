@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 304d6ce43da701d478c3a950d67dc78f, type: 3}
+  m_Name: _DeliveryRecipeSOList
+  m_EditorClassIdentifier: 
+  deliveryRecipeSOList:
+  - {fileID: 11400000, guid: 6eaf54fbb81df4e4aafe73aa72981052, type: 2}
+  - {fileID: 11400000, guid: a6ed649933b12dc4fa8fdb854c1f391e, type: 2}
+  - {fileID: 11400000, guid: 9e1889e887a88214db5f24c429ae00cb, type: 2}
+  - {fileID: 11400000, guid: 4b4d3ea20a08fcf429020a0c2e1c953f, type: 2}
+  - {fileID: 11400000, guid: 24a7f81d0ca44af4fb1ae9f64a847e86, type: 2}
+  - {fileID: 11400000, guid: 5c671a9e09673f048b078a4f693d8968, type: 2}
+  - {fileID: 11400000, guid: c621e2197bb51c74db13ccaab320703c, type: 2}
+  - {fileID: 11400000, guid: fbe4c200adb947942b94025102edadf1, type: 2}
+  - {fileID: 11400000, guid: 5b099a69fab337a469d0b5f9154797f4, type: 2}
+  - {fileID: 11400000, guid: 4082697208cc2944eaaef15f6ee772da, type: 2}

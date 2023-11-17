@@ -6,7 +6,8 @@ using UnityEngine;
 public class PlateKitchenObject : KitchenObject
 {
     public event EventHandler<OnIngredientAddedEventArgs> OnIngredientAdded;
-    public class OnIngredientAddedEventArgs: EventArgs{
+    public class OnIngredientAddedEventArgs : EventArgs
+    {
         public KitchenObjectSO KitchenObjectSO;
     }
     [SerializeField] List<KitchenObjectSO> validKitchenObjectSOList;
@@ -17,7 +18,7 @@ public class PlateKitchenObject : KitchenObject
     }
     public bool TryAddIngredient(KitchenObjectSO kitchenObjectSO)
     {
-        if(!validKitchenObjectSOList.Contains(kitchenObjectSO)) return false;
+        if (!validKitchenObjectSOList.Contains(kitchenObjectSO)) return false;
         if (kitchenObjectSOList.Contains(kitchenObjectSO))
         {
             return false;
@@ -25,7 +26,8 @@ public class PlateKitchenObject : KitchenObject
         else
         {
             kitchenObjectSOList.Add(kitchenObjectSO);
-            OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs{
+            OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs
+            {
                 KitchenObjectSO = kitchenObjectSO
             });
             return true;
@@ -34,5 +36,16 @@ public class PlateKitchenObject : KitchenObject
     public List<KitchenObjectSO> GetKitchenObjectSOList()
     {
         return kitchenObjectSOList;
+    }
+    public bool ContainsKitchenObject(KitchenObjectSO kitchenObjectSO)
+    {
+        foreach (KitchenObjectSO plateKitchenObjectSO in kitchenObjectSOList)
+        {
+            if (plateKitchenObjectSO == kitchenObjectSO)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
