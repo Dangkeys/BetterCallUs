@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
+    public static event EventHandler OnAnyCut;
     [SerializeField] CuttingRecipeSO[] cuttingRecipeSOArray;
     int cuttingProgress;
     public event EventHandler OnCut;
@@ -43,6 +44,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
             if (player.HasKitchenObject()) return;
             if (!HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())) return;
             OnCut?.Invoke(this, EventArgs.Empty);
+            OnAnyCut?.Invoke(this, EventArgs.Empty);
             GetKitchenObject().IncrementCuttingProgress();
             cuttingProgress = GetKitchenObject().CuttingProgress;
 

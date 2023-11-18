@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
+    public event EventHandler OnPickSomething;
     [SerializeField] private Transform kitchenObjectHoldPoint;
     private KitchenObject kitchenObject;
     public static Player Instance { get; private set; }
@@ -140,6 +141,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
+        if(kitchenObject != null)
+        {
+            OnPickSomething?.Invoke(this, EventArgs.Empty);
+        }
     }
     public KitchenObject GetKitchenObject()
     {

@@ -146,6 +146,17 @@
                 },
                 {
                     "name": "",
+                    "id": "ccb9eb49-c894-4ac7-9d70-5d6e67e11e26",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1b7b91dd-793f-4bad-90fa-09192813a54d",
                     "path": "<Keyboard>/e",
                     "interactions": "",
@@ -157,8 +168,30 @@
                 },
                 {
                     "name": "",
+                    "id": "8bf95b9b-618e-4410-a214-533c86c70926",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1f84ea1a-9caa-4eb8-b55f-7222d1f2f13f",
                     "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InteractAlternate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "36db6689-31fc-417d-94df-9f7d728c34fd",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
