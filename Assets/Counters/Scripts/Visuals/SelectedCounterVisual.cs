@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Search;
+
 using UnityEngine;
 
 public class SelectedCounterVisual : MonoBehaviour
@@ -11,7 +8,7 @@ public class SelectedCounterVisual : MonoBehaviour
     [SerializeField] private GameObject[] visualGameObjects;
     void Start()
     {
-        Player.Instance.OnSelectedCounterChanged += ChangedCounterVisual;
+        // Player.Instance.OnSelectedCounterChanged += ChangedCounterVisual;
     }
 
     private void ChangedCounterVisual(object sender, Player.OnSelectedCounterChangedEventArgs e)

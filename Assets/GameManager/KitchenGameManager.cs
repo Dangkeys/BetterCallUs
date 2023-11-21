@@ -18,9 +18,9 @@ public class KitchenGameManager : MonoBehaviour
         GameOver,
     }
     State state;
-    float countDownToStartTimer = 3f;
+    float countDownToStartTimer = 1f;
     float gamePlayingTimer;
-    float gamePlayingTimerMax = 180f;
+    float gamePlayingTimerMax = 300f;
     bool isGamePaused = false;
     private void Awake()
     {
@@ -33,13 +33,17 @@ public class KitchenGameManager : MonoBehaviour
     void Start()
     {
         GameInput.Instance.OnPauseAction += GameInputOnPauseAction;
-        GameInput.Instance.OnInteractAction += (object sender, EventArgs e) => {
-            if(state == State.WaitingToStart)
+        GameInput.Instance.OnInteractAction += (object sender, EventArgs e) =>
+        {
+            if (state == State.WaitingToStart)
             {
                 state = State.CountDownToStart;
                 OnStateChanged?.Invoke(this, EventArgs.Empty);
             }
         };
+        // DEBUG TRIGGER GAME START AUTOMATICALLY 
+        state = State.CountDownToStart;
+        OnStateChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void GameInputOnPauseAction(object sender, EventArgs e)
@@ -50,7 +54,7 @@ public class KitchenGameManager : MonoBehaviour
     public void TogglePauseGame()
     {
         isGamePaused = !isGamePaused;
-        if(isGamePaused)
+        if (isGamePaused)
         {
             Time.timeScale = 0f;
             OnGamePaused?.Invoke(this, EventArgs.Empty);
@@ -67,7 +71,6 @@ public class KitchenGameManager : MonoBehaviour
         switch (state)
         {
             case State.WaitingToStart:
-
                 break;
             case State.CountDownToStart:
                 countDownToStartTimer -= Time.deltaTime;

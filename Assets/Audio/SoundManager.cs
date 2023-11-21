@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -18,7 +16,7 @@ public class SoundManager : MonoBehaviour
     }
     private void Start()
     {
-        Player.Instance.OnPickSomething += OnPickup;
+        // Player.Instance.OnPickSomething += OnPickup;
         DeliveryManager.Instance.OnRecipeSuccess += OnDeliverySuccess;
         DeliveryManager.Instance.OnRecipeFailed += OnDeliveryFailed;
         CuttingCounter.OnAnyCut += OnAnyCut;
@@ -41,7 +39,7 @@ public class SoundManager : MonoBehaviour
     private void OnPickup(object sender, EventArgs e)
     {
 
-        PlaySound(audiosReferenceSO.objectPickup, Player.Instance.transform.position);
+        // PlaySound(audiosReferenceSO.objectPickup, Player.Instance.transform.position);
     }
 
     private void OnAnyCut(object sender, EventArgs e)

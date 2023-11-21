@@ -1,24 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IKitchenObjectParent
+public class Player : NetworkBehaviour, IKitchenObjectParent
 {
     public event EventHandler OnPickSomething;
     [SerializeField] private Transform kitchenObjectHoldPoint;
     private KitchenObject kitchenObject;
-    public static Player Instance { get; private set; }
+    // public static Player Instance { get; private set; }
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Debug.Log("Error meow meow");
-        }
+        //Instance = this;
     }
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
@@ -26,7 +20,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         public BaseCounter selectedCounter;
     }
     [SerializeField] private float moveSpeed = 7f;
-    [SerializeField] private GameInput gameInput;
 
     public bool IsWalking { get; private set; }
     private Vector3 lastInteractDir;
@@ -34,8 +27,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void Start()
     {
-        gameInput.OnInteractAction += GameInputOnInteractAction;
-        gameInput.OnInteractAlternateAction += GameInputOnInteractAlternateAction;
+        GameInput.Instance.OnInteractAction += GameInputOnInteractAction;
+        GameInput.Instance.OnInteractAlternateAction += GameInputOnInteractAlternateAction;
     }
 
     private void GameInputOnInteractAlternateAction(object sender, EventArgs e)
@@ -60,7 +53,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleInteractions()
     {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y).normalized;
         float interactDistance = 2f;
         if (moveDir != Vector3.zero)
@@ -96,7 +89,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
     private void HandleMovement()
     {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y).normalized;
 
         float playerRadius = 0.7f;
