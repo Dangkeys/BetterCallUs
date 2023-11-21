@@ -35,10 +35,9 @@ public class DeliveryManager : MonoBehaviour
     private void TrySpawnRecipe()
     {
         spawnRecipeTimer -= Time.deltaTime;
-        if (spawnRecipeTimer <= 0f)
+        if (spawnRecipeTimer <= 0f && waitingRecipeSOList.Count < waitingRecipesMax)
         {
             spawnRecipeTimer = spawnRecipeTimerMax;
-            if (waitingRecipeSOList.Count >= waitingRecipesMax) return;
             AddRandomRecipeToWaitingList();
         }
     }
@@ -65,6 +64,7 @@ public class DeliveryManager : MonoBehaviour
             if (CheckIfRecipeMatchesPlate(waitingRecipeSO, plateKitchenObject))
             {
                 successfulRecipesAmount++;
+                spawnRecipeTimer = spawnRecipeTimerMax;
                 Debug.Log("Player delivered the correct recipe");
                 waitingRecipeSOList.RemoveAt(i);
                 OnRecipeCompleted?.Invoke(this, EventArgs.Empty);

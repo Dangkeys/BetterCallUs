@@ -40,14 +40,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void GameInputOnInteractAlternateAction(object sender, EventArgs e)
     {
-        if(!KitchenGameManager.Instance.IsGamePlaying()) return;
-        if(selectedCounter == null) return;
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+        if (selectedCounter == null) return;
         selectedCounter.InteractAlternate(this);
     }
 
     private void GameInputOnInteractAction(object sender, System.EventArgs e)
     {
-        if(!KitchenGameManager.Instance.IsGamePlaying()) return;
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
         if (selectedCounter == null) return;
         selectedCounter.Interact(this);
     }
@@ -103,38 +103,31 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         float playerHeight = 2f;
         float moveDistance = moveSpeed * Time.deltaTime;
 
-        bool canMove = TryMove(transform.position, moveDir, playerRadius, playerHeight, moveDistance);
+        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
 
+        if (!canMove)
+        {
+            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
+            canMove = (moveDir.x < -.5f || moveDir.x > .5f)&&!Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+            if (canMove)
+                moveDir = moveDirX;
+            else
+            {
+                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
+                canMove = (moveDir.z < -.5f || moveDir.z > .5f)&&!Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+                if (canMove)
+                    moveDir = moveDirZ;
+            }
+        }
         if (canMove)
             transform.position += moveDir * moveDistance;
-        else
-            TryMoveInOtherDirections(moveDir, playerRadius, playerHeight, moveDistance);
 
         IsWalking = moveDir != Vector3.zero;
 
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
     }
-    private bool TryMove(Vector3 position, Vector3 direction, float radius, float height, float distance)
-    {
-        bool hit = Physics.CapsuleCast(position, position + Vector3.up * height, radius, direction, out RaycastHit hitInfo, distance);
-        return !hit;
-    }
 
-    private void TryMoveInOtherDirections(Vector3 moveDir, float playerRadius, float playerHeight, float moveDistance)
-    {
-        Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-        if (TryMove(transform.position, moveDirX, playerRadius, playerHeight, moveDistance))
-        {
-            transform.position += moveDirX * moveDistance;
-            return;
-        }
-
-        Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-        if (TryMove(transform.position, moveDirZ, playerRadius, playerHeight, moveDistance))
-            transform.position += moveDirZ * moveDistance;
-
-    }
 
     public Transform GetKitchenObjectFollowTransform()
     {
@@ -143,7 +136,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
-        if(kitchenObject != null)
+        if (kitchenObject != null)
         {
             OnPickSomething?.Invoke(this, EventArgs.Empty);
         }
