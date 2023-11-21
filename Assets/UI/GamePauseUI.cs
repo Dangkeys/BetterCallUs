@@ -11,35 +11,44 @@ public class GamePauseUI : MonoBehaviour
     [SerializeField] Button optionsButton;
     void Awake()
     {
-        resumeButton.onClick.AddListener(()=>{
+        resumeButton.onClick.AddListener(() =>
+        {
             KitchenGameManager.Instance.TogglePauseGame();
         });
-        mainMenuButton.onClick.AddListener(()=>{
-           Loader.Load(Loader.Scene.MainMenuScene); 
+        mainMenuButton.onClick.AddListener(() =>
+        {
+            Loader.Load(Loader.Scene.MainMenuScene);
         });
-        optionsButton.onClick.AddListener(() => {
-            OptionsUI.Instance.Show(true);
+        optionsButton.onClick.AddListener(() =>
+        {
+            Hide();
+            OptionsUI.Instance.Show(Show);
         });
     }
     void Start()
     {
         KitchenGameManager.Instance.OnGamePaused += ShowPausedUI;
         KitchenGameManager.Instance.OnGameUnPaused += HidePausedUI;
-        Show(false);
+        Hide();
     }
 
     private void HidePausedUI(object sender, EventArgs e)
     {
-        Show(false);
+        Hide();
     }
 
     private void ShowPausedUI(object sender, EventArgs e)
     {
-        Show(true);
+        Show();
     }
 
-    void Show(bool isShow)
+    void Show()
     {
-        gameObject.SetActive(isShow);
+        gameObject.SetActive(true);
+        resumeButton.Select();
+    }
+    void Hide()
+    {
+        gameObject.SetActive(false);
     }
 }

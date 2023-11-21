@@ -12,6 +12,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnPauseAction;
     public event EventHandler OnInteractAction;
     public event EventHandler OnInteractAlternateAction;
+    public event EventHandler OnBindingRebind;
     private PlayerInputActions playerInputActions;
     public enum Binding
     {
@@ -22,13 +23,17 @@ public class GameInput : MonoBehaviour
         Interact,
         InteractAlternate,
         Pause,
+        GamePad_Interact,
+        GamePad_InteractAlternate,
+        GamePad_Pause,
+
     }
     private void Awake()
     {
         if (Instance != null) { Debug.LogError("There is more than 1 GameInput"); return; }
         Instance = this;
         playerInputActions = new PlayerInputActions();
-        if(PlayerPrefs.HasKey(PLAYER_PREFS_BINDINGS))
+        if (PlayerPrefs.HasKey(PLAYER_PREFS_BINDINGS))
             playerInputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_PREFS_BINDINGS));
         playerInputActions.Player.Enable();
         playerInputActions.Player.Interact.performed += InteractPerformed;
@@ -82,6 +87,12 @@ public class GameInput : MonoBehaviour
                 return playerInputActions.Player.InteractAlternate.bindings[0].ToDisplayString();
             case Binding.Pause:
                 return playerInputActions.Player.Pause.bindings[0].ToDisplayString();
+            case Binding.GamePad_Interact:
+                return playerInputActions.Player.Interact.bindings[1].ToDisplayString();
+            case Binding.GamePad_InteractAlternate:
+                return playerInputActions.Player.InteractAlternate.bindings[1].ToDisplayString();
+            case Binding.GamePad_Pause:
+                return playerInputActions.Player.Pause.bindings[1].ToDisplayString();
         }
     }
     public void RebindBinding(Binding binding, Action onActionRebound)
@@ -119,6 +130,18 @@ public class GameInput : MonoBehaviour
                 inputAction = playerInputActions.Player.Pause;
                 bindingIndex = 0;
                 break;
+            case Binding.GamePad_Interact:
+                inputAction = playerInputActions.Player.Interact;
+                bindingIndex = 1;
+                break;
+            case Binding.GamePad_InteractAlternate:
+                inputAction = playerInputActions.Player.InteractAlternate;
+                bindingIndex = 1;
+                break;
+            case Binding.GamePad_Pause:
+                inputAction = playerInputActions.Player.Pause;
+                bindingIndex = 1;
+                break;
         }
         playerInputActions.Player.Disable();
         inputAction.PerformInteractiveRebinding(bindingIndex).OnComplete(
@@ -129,6 +152,7 @@ public class GameInput : MonoBehaviour
                 onActionRebound();
                 PlayerPrefs.SetString(PLAYER_PREFS_BINDINGS, playerInputActions.SaveBindingOverridesAsJson());
                 PlayerPrefs.Save();
+                OnBindingRebind?.Invoke(this, EventArgs.Empty);
             }
         ).Start();
     }
