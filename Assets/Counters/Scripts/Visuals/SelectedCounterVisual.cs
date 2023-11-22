@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 
 public class SelectedCounterVisual : MonoBehaviour
@@ -8,7 +9,17 @@ public class SelectedCounterVisual : MonoBehaviour
     [SerializeField] private GameObject[] visualGameObjects;
     void Start()
     {
-        // Player.Instance.OnSelectedCounterChanged += ChangedCounterVisual;
+        if (Player.LocalInstance != null)
+            Player.LocalInstance.OnSelectedCounterChanged += ChangedCounterVisual;
+        else
+            Player.OnAnyPlayerSpawned += (object sender, EventArgs e) =>
+            {
+                if (Player.LocalInstance != null)
+                {
+                    Player.LocalInstance.OnSelectedCounterChanged -= ChangedCounterVisual;
+                    Player.LocalInstance.OnSelectedCounterChanged += ChangedCounterVisual;
+                }
+            };
     }
 
     private void ChangedCounterVisual(object sender, Player.OnSelectedCounterChangedEventArgs e)
@@ -18,7 +29,7 @@ public class SelectedCounterVisual : MonoBehaviour
 
     private void Show(bool isShow)
     {
-        foreach(GameObject visualGameObject in visualGameObjects)
+        foreach (GameObject visualGameObject in visualGameObjects)
         {
             visualGameObject.SetActive(isShow);
         }

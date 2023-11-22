@@ -6,14 +6,16 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour, IKitchenObjectParent
 {
-    public event EventHandler OnPickSomething;
+    public static event EventHandler OnAnyPlayerSpawned;
+    public static event EventHandler OnAnyPickedSomething;
+    public static void ResetStaticData()
+    {
+        OnAnyPlayerSpawned = null;
+    }
+    public event EventHandler OnPickedSomething;
     [SerializeField] private Transform kitchenObjectHoldPoint;
     private KitchenObject kitchenObject;
-    // public static Player Instance { get; private set; }
-    private void Awake()
-    {
-        //Instance = this;
-    }
+    public static Player LocalInstance { get; private set; }
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
@@ -29,6 +31,12 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     {
         GameInput.Instance.OnInteractAction += GameInputOnInteractAction;
         GameInput.Instance.OnInteractAlternateAction += GameInputOnInteractAlternateAction;
+    }
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+            LocalInstance = this;
+        OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     private void GameInputOnInteractAlternateAction(object sender, EventArgs e)
@@ -47,6 +55,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private void Update()
     {
+        if (!IsOwner) return;
         HandleMovement();
         HandleInteractions();
     }
@@ -101,13 +110,13 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         if (!canMove)
         {
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = (moveDir.x < -.5f || moveDir.x > .5f)&&!Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+            canMove = (moveDir.x < -.5f || moveDir.x > .5f) && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
             if (canMove)
                 moveDir = moveDirX;
             else
             {
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = (moveDir.z < -.5f || moveDir.z > .5f)&&!Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+                canMove = (moveDir.z < -.5f || moveDir.z > .5f) && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
                 if (canMove)
                     moveDir = moveDirZ;
             }
@@ -131,7 +140,8 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         this.kitchenObject = kitchenObject;
         if (kitchenObject != null)
         {
-            OnPickSomething?.Invoke(this, EventArgs.Empty);
+            OnPickedSomething?.Invoke(this, EventArgs.Empty);
+            OnAnyPickedSomething.Invoke(this, EventArgs.Empty);
         }
     }
     public KitchenObject GetKitchenObject()
@@ -145,5 +155,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
+    }
+
+    public NetworkObject GetNetworkObject()
+    {
+        return NetworkObject;
     }
 }

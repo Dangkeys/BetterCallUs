@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4213bfb7a1517da4c998a83e5160a8f3, type: 3}
+  m_Name: KitchenObjectSOList
+  m_EditorClassIdentifier: 
+  kitchenObjectSOList:
+  - {fileID: 11400000, guid: 9f0054a9c4064a64aa2f778ff60e63bd, type: 2}
+  - {fileID: 11400000, guid: 93f14c7b58fa00a43bd8ac2d6eee3c3d, type: 2}
+  - {fileID: 11400000, guid: 957fc48fd72354549a3a9e7415312ea5, type: 2}
+  - {fileID: 11400000, guid: 708c3684456d3034f8d74914bef948b5, type: 2}
+  - {fileID: 11400000, guid: c0c1e951c625bd04288be63264826ae7, type: 2}
+  - {fileID: 11400000, guid: 886fd3b56937e3444bcc2d11093f6af5, type: 2}
+  - {fileID: 11400000, guid: 857c4cab165858448b44d1aa8c704d1f, type: 2}
+  - {fileID: 11400000, guid: 2c653795c071fb044b92fb5361b569ff, type: 2}
+  - {fileID: 11400000, guid: 82568c7ad48a23246bb28fa03212b101, type: 2}
+  - {fileID: 11400000, guid: 841b3ecd7387f6647820dfab452c4ceb, type: 2}
+  - {fileID: 11400000, guid: 8c11918027274014f97debe807a27120, type: 2}
