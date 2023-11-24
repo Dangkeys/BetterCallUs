@@ -27,7 +27,6 @@ public class PlateKitchenObject : KitchenObject
         }
         else
         {
-
             AddIngredientServerRpc(KitchenGameMultiplayer.Instance.GetKitchenObjectSOIndex(kitchenObjectSO));
             return true;
         }

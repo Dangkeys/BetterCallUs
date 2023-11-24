@@ -24,6 +24,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] LayerMask countersLayerMask;
     [SerializeField] LayerMask collisionsLayerMask;
+    [SerializeField] List<Vector3> spawnPositionList;
     public bool IsWalking { get; private set; }
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
@@ -38,6 +39,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         if (IsOwner)
             LocalInstance = this;
         OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
+        transform.position = spawnPositionList[(int)OwnerClientId];
     }
 
     private void GameInputOnInteractAlternateAction(object sender, EventArgs e)

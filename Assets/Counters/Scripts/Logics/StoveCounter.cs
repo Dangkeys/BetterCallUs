@@ -29,8 +29,6 @@ public class StoveCounter : BaseCounter, IHasProgress
     BurningRecipeSO burningRecipeSO;
     public override void OnNetworkSpawn()
     {
-
-
         fryingTimer.OnValueChanged += (float previousValue, float newValue) =>
         {
             float fryingTimerMax = fryingRecipeSO != null ? fryingRecipeSO.fryingTimerMax : 1f;
@@ -53,6 +51,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 state = state.Value
             });
+
             if (state.Value == State.Idle || state.Value == State.Burned)
             {
                 OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
@@ -63,7 +62,7 @@ public class StoveCounter : BaseCounter, IHasProgress
         };
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!IsServer) return;
         if (!HasKitchenObject()) return;
@@ -79,12 +78,11 @@ public class StoveCounter : BaseCounter, IHasProgress
                 {
                     KitchenObject.DestroyKitchenObject(GetKitchenObject());
                     KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
-                    burningRecipeSO = GetBurningRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
                     state.Value = State.Fried;
                     burningTimer.Value = 0f;
                     SetBurningRecipeSOClientRpc(
                         KitchenGameMultiplayer.Instance.GetKitchenObjectSOIndex(GetKitchenObject().GetKitchenObjectSO())
-                    );
+                        );
                 }
 
                 break;
@@ -94,6 +92,7 @@ public class StoveCounter : BaseCounter, IHasProgress
 
                 if (burningTimer.Value >= burningRecipeSO.burningTimerMax)
                 {
+                    burningTimer.Value = 0f;
                     KitchenObject.DestroyKitchenObject(GetKitchenObject());
                     KitchenObject.SpawnKitchenObject(burningRecipeSO.output, this);
                     state.Value = State.Burned;

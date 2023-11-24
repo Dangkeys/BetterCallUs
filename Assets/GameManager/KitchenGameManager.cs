@@ -18,7 +18,8 @@ public class KitchenGameManager : MonoBehaviour
         GameOver,
     }
     State state;
-    float countDownToStartTimer = 1f;
+    bool isLocalPlayerReady;
+    float countDownToStartTimer = 3f;
     float gamePlayingTimer;
     float gamePlayingTimerMax = 300f;
     public bool IsGamePaused {get; private set;}
@@ -41,9 +42,7 @@ public class KitchenGameManager : MonoBehaviour
                 OnStateChanged?.Invoke(this, EventArgs.Empty);
             }
         };
-        // DEBUG TRIGGER GAME START AUTOMATICALLY 
-        state = State.CountDownToStart;
-        OnStateChanged?.Invoke(this, EventArgs.Empty);
+
     }
 
     private void GameInputOnPauseAction(object sender, EventArgs e)

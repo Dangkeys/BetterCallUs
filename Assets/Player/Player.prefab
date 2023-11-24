@@ -90,6 +90,11 @@ MonoBehaviour:
   collisionsLayerMask:
     serializedVersion: 2
     m_Bits: 192
+  spawnPositionList:
+  - {x: -2, y: 0, z: 2}
+  - {x: 2, y: 0, z: 2}
+  - {x: -2, y: 0, z: -2}
+  - {x: 2, y: 0, z: -2}
 --- !u!114 &7838628405512516114
 MonoBehaviour:
   m_ObjectHideFlags: 0
