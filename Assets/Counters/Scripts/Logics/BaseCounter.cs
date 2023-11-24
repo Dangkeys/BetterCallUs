@@ -23,7 +23,7 @@ public class BaseCounter : NetworkBehaviour, IKitchenObjectParent
         {
             if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
             {
-                GetKitchenObject().DestroySelf();
+                KitchenGameMultiplayer.Instance.DestroyKitchenObject(GetKitchenObject());
                 return true;
             }
         }
@@ -33,7 +33,7 @@ public class BaseCounter : NetworkBehaviour, IKitchenObjectParent
             {
                 if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
                 {
-                    player.GetKitchenObject().DestroySelf();
+                    KitchenGameMultiplayer.Instance.DestroyKitchenObject(player.GetKitchenObject());
                     return true;
                 }
             }

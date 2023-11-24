@@ -9,8 +9,8 @@ public class KitchenObject : NetworkBehaviour
 
     //the code below need to refactor
     public int CuttingProgress { get; private set; }
-    public float FryingTimer { get; private set; }
-    public float BurningTimer { get; private set; }
+    public NetworkVariable<float> FryingTimer = new NetworkVariable<float>(0f);
+    public NetworkVariable<float> BurningTimer = new NetworkVariable<float>(0f);
     FollowTransform followTransform;
 
     protected virtual void Awake()
@@ -21,25 +21,30 @@ public class KitchenObject : NetworkBehaviour
 
     [SerializeField] KitchenObjectSO kitchenObjectSO;
     private IKitchenObjectParent kitchenObjectParent;
+    
     public void IncrementCuttingProgress()
     {
         CuttingProgress++;
     }
     public void IncrementFryingTimer(float deltaTime)
     {
-        FryingTimer += deltaTime;
+        if(!IsServer) return;
+        FryingTimer.Value += deltaTime;
     }
     public void IncrementBurningTimer(float deltaTime)
     {
-        BurningTimer += deltaTime;
+        if(!IsServer) return;
+        BurningTimer.Value += deltaTime;
     }
     public void ClearFryingTimer()
     {
-        FryingTimer = 0;
+        if(!IsServer) return;
+        FryingTimer.Value = 0;
     }
     public void ClearBurningTimer()
     {
-        BurningTimer = 0;
+        if(!IsServer) return;
+        BurningTimer.Value = 0;
     }
     public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
     {
@@ -93,12 +98,20 @@ public class KitchenObject : NetworkBehaviour
     }
     public void DestroySelf()
     {
-        kitchenObjectParent.ClearKitchenObject();
+
         Destroy(gameObject);
+    }
+    public void ClearKitchenObjectOnParent()
+    {
+        kitchenObjectParent.ClearKitchenObject();
     }
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
         KitchenGameMultiplayer.Instance.SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent);
+    }
+    public static void DestroyKitchenObject(KitchenObject kitchenObject)
+    {
+        KitchenGameMultiplayer.Instance.DestroyKitchenObject(kitchenObject);
     }
 
 }

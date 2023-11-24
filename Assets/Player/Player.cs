@@ -22,7 +22,8 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         public BaseCounter selectedCounter;
     }
     [SerializeField] private float moveSpeed = 7f;
-
+    [SerializeField] LayerMask countersLayerMask;
+    [SerializeField] LayerMask collisionsLayerMask;
     public bool IsWalking { get; private set; }
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
@@ -67,7 +68,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         float interactDistance = 2f;
         if (moveDir != Vector3.zero)
             lastInteractDir = moveDir;
-        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance))
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
         {
             if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
@@ -102,21 +103,23 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y).normalized;
 
         float playerRadius = 0.7f;
-        float playerHeight = 2f;
         float moveDistance = moveSpeed * Time.deltaTime;
 
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
+        bool canMove = !Physics.BoxCast(transform.position, Vector3.one * playerRadius,
+        moveDir, Quaternion.identity, moveDistance, collisionsLayerMask);
 
         if (!canMove)
         {
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = (moveDir.x < -.5f || moveDir.x > .5f) && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+            canMove = (moveDir.x < -.5f || moveDir.x > .5f) && !Physics.BoxCast(transform.position, Vector3.one * playerRadius,
+            moveDirX, Quaternion.identity, moveDistance, collisionsLayerMask);
             if (canMove)
                 moveDir = moveDirX;
             else
             {
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = (moveDir.z < -.5f || moveDir.z > .5f) && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+                canMove = (moveDir.z < -.5f || moveDir.z > .5f) && !Physics.BoxCast(transform.position, Vector3.one * playerRadius,
+            moveDirZ, Quaternion.identity, moveDistance, collisionsLayerMask);
                 if (canMove)
                     moveDir = moveDirZ;
             }
