@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5993896731116513819}
   - component: {fileID: 4445237585650663581}
   - component: {fileID: 6095580279028691144}
+  - component: {fileID: 101034808935094425}
   m_Layer: 0
   m_Name: Tomato
   m_TagString: Untagged
@@ -67,6 +68,18 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &101034808935094425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744019901535403746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52e25594d2b1060489d4941c05730852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1576657208247558896
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -41,14 +41,14 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private void GameInputOnInteractAlternateAction(object sender, EventArgs e)
     {
-        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+        if (!KitchenGameManager.Instance.IsGamePlaying() || KitchenGameManager.Instance.IsGamePaused) return;
         if (selectedCounter == null) return;
         selectedCounter.InteractAlternate(this);
     }
 
     private void GameInputOnInteractAction(object sender, System.EventArgs e)
     {
-        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+        if (!KitchenGameManager.Instance.IsGamePlaying() || KitchenGameManager.Instance.IsGamePaused) return;
         if (selectedCounter == null) return;
         selectedCounter.Interact(this);
     }

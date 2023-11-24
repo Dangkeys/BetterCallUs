@@ -21,7 +21,7 @@ public class KitchenGameManager : MonoBehaviour
     float countDownToStartTimer = 1f;
     float gamePlayingTimer;
     float gamePlayingTimerMax = 300f;
-    bool isGamePaused = false;
+    public bool IsGamePaused {get; private set;}
     private void Awake()
     {
         if (Instance != null) { Debug.LogError("There is more than 1 kitchenGameManager"); return; }
@@ -53,8 +53,8 @@ public class KitchenGameManager : MonoBehaviour
 
     public void TogglePauseGame()
     {
-        isGamePaused = !isGamePaused;
-        if (isGamePaused)
+        IsGamePaused = !IsGamePaused;
+        if (IsGamePaused)
         {
             Time.timeScale = 0f;
             OnGamePaused?.Invoke(this, EventArgs.Empty);

@@ -11,6 +11,12 @@ public class KitchenObject : NetworkBehaviour
     public int CuttingProgress { get; private set; }
     public float FryingTimer { get; private set; }
     public float BurningTimer { get; private set; }
+    FollowTransform followTransform;
+
+    protected virtual void Awake()
+    {
+        followTransform = GetComponent<FollowTransform>();
+    }
     //the upper code need to refactor
 
     [SerializeField] KitchenObjectSO kitchenObjectSO;
@@ -56,6 +62,18 @@ public class KitchenObject : NetworkBehaviour
     }
     public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
     {
+        SetKitchenObjectParentServerRpc(kitchenObjectParent.GetNetworkObject());
+    }
+    [ServerRpc(RequireOwnership = false)]
+    void SetKitchenObjectParentServerRpc(NetworkObjectReference parentNetworkObjectReference)
+    {
+        SetKitchenObjectParentClientRpc(parentNetworkObjectReference);
+    }
+    [ClientRpc]
+    void SetKitchenObjectParentClientRpc(NetworkObjectReference parentNetworkObjectReference)
+    {
+        parentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
+        IKitchenObjectParent kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
         if (this.kitchenObjectParent != null)
         {
             this.kitchenObjectParent.ClearKitchenObject();
@@ -67,8 +85,7 @@ public class KitchenObject : NetworkBehaviour
         }
         kitchenObjectParent.SetKitchenObject(this);
 
-        // transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
-        // transform.localPosition = Vector3.zero;
+        followTransform.TargetTransform = kitchenObjectParent.GetKitchenObjectFollowTransform();
     }
     public IKitchenObjectParent GetKitchenObjectParent()
     {
