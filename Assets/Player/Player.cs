@@ -40,18 +40,29 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
             LocalInstance = this;
         OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
         transform.position = spawnPositionList[(int)OwnerClientId];
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += (ulong clientId) =>
+            {
+                if(clientId == OwnerClientId && HasKitchenObject())
+                {
+                    KitchenObject.DestroyKitchenObject(GetKitchenObject());
+                }
+            };
+        }
+
     }
 
     private void GameInputOnInteractAlternateAction(object sender, EventArgs e)
     {
-        if (!KitchenGameManager.Instance.IsGamePlaying() || KitchenGameManager.Instance.IsGamePaused) return;
+        if (!KitchenGameManager.Instance.IsGamePlaying() || KitchenGameManager.Instance.GetGamePaused()) return;
         if (selectedCounter == null) return;
         selectedCounter.InteractAlternate(this);
     }
 
     private void GameInputOnInteractAction(object sender, System.EventArgs e)
     {
-        if (!KitchenGameManager.Instance.IsGamePlaying() || KitchenGameManager.Instance.IsGamePaused) return;
+        if (!KitchenGameManager.Instance.IsGamePlaying() || KitchenGameManager.Instance.GetGamePaused()) return;
         if (selectedCounter == null) return;
         selectedCounter.Interact(this);
     }

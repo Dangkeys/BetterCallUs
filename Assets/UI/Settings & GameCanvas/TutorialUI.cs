@@ -22,6 +22,10 @@ public class TutorialUI : MonoBehaviour
             if(KitchenGameManager.Instance.IsCountdownState())
                 Hide();
         };
+        KitchenGameManager.Instance.OnLocalPlayerReadyChanged += (object sender, EventArgs e) => {
+            if(KitchenGameManager.Instance.IsLocalPlayerReady)
+                Hide();
+        };
         UpdateVisual();
         Show();
     }

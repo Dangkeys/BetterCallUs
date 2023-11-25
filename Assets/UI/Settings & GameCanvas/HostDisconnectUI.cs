@@ -1,16 +1,21 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverUI : MonoBehaviour
+public class HostDisconnectUI : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI recipesDevliverdText;
+    
     [SerializeField] Button tryAgainButton;
+    void Start()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback += (ulong clientId) => {
+            if(clientId == NetworkManager.ServerClientId)
+                Show(true);
+        };
+        Show(false);
+    }
     void Awake()
     {
         tryAgainButton.onClick.AddListener(() =>
@@ -19,24 +24,15 @@ public class GameOverUI : MonoBehaviour
             Loader.Load(Loader.Scene.MainMenuScene);
         });
     }
-    private void Start()
-    {
-        KitchenGameManager.Instance.OnStateChanged += ShowGameOverUI;
-        Show(false);
-    }
 
 
 
-    private void ShowGameOverUI(object sender, EventArgs e)
-    {
-        Show(KitchenGameManager.Instance.IsGameOverState());
-    }
+
     void Show(bool isShow)
     {
         gameObject.SetActive(isShow);
         if (isShow)
         {
-            recipesDevliverdText.text = DeliveryManager.Instance.GetSuccessfulRecipesAmount().ToString();
             tryAgainButton.Select();
         }
 
