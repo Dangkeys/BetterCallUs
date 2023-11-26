@@ -36,6 +36,7 @@ public class StoveCounterSound : MonoBehaviour
                 SoundManager.Instance.PlayWarningSound(stoveCounter.transform.position);
             }
         }
+        audioSource.volume = SoundManager.Instance.GetVolume();
     }
     private void PlaySizzlingSound(object sender, StoveCounter.OnStateChangedEventArgs e)
     {

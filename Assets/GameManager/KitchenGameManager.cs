@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using QFSW.QC;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class KitchenGameManager : NetworkBehaviour
 {
     public static KitchenGameManager Instance { get; private set; }
@@ -30,7 +31,7 @@ public class KitchenGameManager : NetworkBehaviour
     Dictionary<ulong, bool> playerReadyDictionary;
     Dictionary<ulong, bool> playerPausedDictionary;
     bool autoTestGamePausedState;
-
+    [SerializeField] Transform playerPrefabsTransform;
     private void Awake()
     {
         Instance = this;
@@ -110,8 +111,19 @@ public class KitchenGameManager : NetworkBehaviour
             NetworkManager.Singleton.OnClientDisconnectCallback += (ulong clientId) => {
                 autoTestGamePausedState = true;
             };
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SpawnPlayer;
         }
     }
+
+    private void SpawnPlayer(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+        foreach(ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            Transform playerTransform = Instantiate(playerPrefabsTransform);
+            playerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+        }
+    }
+
     [ServerRpc(RequireOwnership = false)]
     private void SetPlayerReadyServerRpc(ServerRpcParams serverRpcParams = default)
     {

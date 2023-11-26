@@ -23,7 +23,7 @@ public class TestingNetCodeUI : MonoBehaviour
   }
   void Start()
   {
-
+    startHostButton.Select();
   }
   void Hide()
   {
