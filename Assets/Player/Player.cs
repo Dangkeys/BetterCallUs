@@ -12,7 +12,6 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     {
         OnAnyPlayerSpawned = null;
     }
-    public event EventHandler OnPickedSomething;
     [SerializeField] private Transform kitchenObjectHoldPoint;
     private KitchenObject kitchenObject;
     public static Player LocalInstance { get; private set; }
@@ -25,6 +24,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     [SerializeField] LayerMask countersLayerMask;
     [SerializeField] LayerMask collisionsLayerMask;
     [SerializeField] List<Vector3> spawnPositionList;
+    [SerializeField] PlayerVisual playerVisual;
     public bool IsWalking { get; private set; }
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
@@ -33,13 +33,15 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     {
         GameInput.Instance.OnInteractAction += GameInputOnInteractAction;
         GameInput.Instance.OnInteractAlternateAction += GameInputOnInteractAlternateAction;
+        PlayerData localPlayerData = KitchenGameMultiplayer.Instance.GetPlayerDataFromClientId(OwnerClientId);
+        playerVisual.SetPlayerColor(KitchenGameMultiplayer.Instance.GetPlayerColor(localPlayerData.colorId));
     }
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
             LocalInstance = this;
         OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
-        transform.position = spawnPositionList[(int)OwnerClientId];
+        transform.position = spawnPositionList[KitchenGameMultiplayer.Instance.GetPlayerDataIndexFromClientId(OwnerClientId)];
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientDisconnectCallback += (ulong clientId) =>
@@ -76,6 +78,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private void HandleInteractions()
     {
+        if (!IsOwner) return;
         Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y).normalized;
         float interactDistance = 2f;
@@ -100,10 +103,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         {
             SetSelectedCounter(null);
         }
-        // Debug.Log(selectedCounter);
     }
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
+        if (!IsOwner) return;
         this.selectedCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
         {
@@ -112,6 +115,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     }
     private void HandleMovement()
     {
+        if (!IsOwner) return;
         Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y).normalized;
 
@@ -145,8 +149,6 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
     }
-
-
     public Transform GetKitchenObjectFollowTransform()
     {
         return kitchenObjectHoldPoint;
@@ -156,8 +158,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         this.kitchenObject = kitchenObject;
         if (kitchenObject != null)
         {
-            OnPickedSomething?.Invoke(this, EventArgs.Empty);
-            OnAnyPickedSomething.Invoke(this, EventArgs.Empty);
+            OnAnyPickedSomething?.Invoke(this, EventArgs.Empty);
         }
     }
     public KitchenObject GetKitchenObject()

@@ -116,7 +116,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             if (!player.HasKitchenObject()) return;
             if (!HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) return;
             KitchenObject kitchenObject = player.GetKitchenObject();
-            kitchenObject.SetKitchenObjectParent(this);
+            kitchenObject.Net_SetKitchenObjectParent(this);
             InteractLogicServerRpc(
                 KitchenGameMultiplayer.Instance.GetKitchenObjectSOIndex(kitchenObject.GetKitchenObjectSO())
             );

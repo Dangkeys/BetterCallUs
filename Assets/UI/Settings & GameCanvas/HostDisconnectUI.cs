@@ -6,15 +6,17 @@ using UnityEngine.UI;
 
 public class HostDisconnectUI : MonoBehaviour
 {
-    
+
     [SerializeField] Button tryAgainButton;
     void Start()
     {
-        NetworkManager.Singleton.OnClientDisconnectCallback += (ulong clientId) => {
-            if(clientId == NetworkManager.ServerClientId)
-                Show(true);
-        };
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
         Show(false);
+    }
+    void OnClientDisconnect(ulong clientId)
+    {
+        if (clientId == NetworkManager.ServerClientId)
+            Show(true);
     }
     void Awake()
     {
@@ -24,10 +26,6 @@ public class HostDisconnectUI : MonoBehaviour
             Loader.Load(Loader.Scene.MainMenuScene);
         });
     }
-
-
-
-
     void Show(bool isShow)
     {
         gameObject.SetActive(isShow);
@@ -36,5 +34,9 @@ public class HostDisconnectUI : MonoBehaviour
             tryAgainButton.Select();
         }
 
+    }
+    void OnDestroy()
+    {
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
     }
 }

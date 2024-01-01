@@ -20,18 +20,18 @@ public class CuttingCounter : BaseCounter, IHasProgress
             if (player.HasKitchenObject())
                 TryHandlePlate(player);
             else
-                GetKitchenObject().SetKitchenObjectParent(player);
+                GetKitchenObject().Net_SetKitchenObjectParent(player);
             SetProgressToZeroServerRpc();
         }
         else
         {
             if (!player.HasKitchenObject()) return;
             KitchenObject kitchenObject = player.GetKitchenObject();
-            kitchenObject.SetKitchenObjectParent(this);
+            kitchenObject.Net_SetKitchenObjectParent(this);
             cuttingProgress = kitchenObject.CuttingProgress;
             if (!HasRecipeWithInput(kitchenObject.GetKitchenObjectSO())) return;
-            InteractLogicPlaceObjectOnCounterServerRpc((float)cuttingProgress  / 
-            GetCuttingProgressMax(kitchenObject.GetKitchenObjectSO() ));
+            InteractLogicPlaceObjectOnCounterServerRpc((float)cuttingProgress /
+            GetCuttingProgressMax(kitchenObject.GetKitchenObjectSO()));
         }
     }
 
@@ -69,13 +69,17 @@ public class CuttingCounter : BaseCounter, IHasProgress
             if (player.HasKitchenObject()) return;
             if (!HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())) return;
             CutObjectServerRpc();
-            HanldeOnCuttingProgressDoneServerRpc();
+            HandleOnCuttingProgressDoneServerRpc();
         }
     }
     [ServerRpc(RequireOwnership = false)]
     void CutObjectServerRpc()
     {
-        CutObjectClientRpc();
+        if (HasKitchenObject())
+        {
+            if (!HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())) return;
+            CutObjectClientRpc();
+        }
     }
     [ClientRpc]
     void CutObjectClientRpc()
@@ -92,8 +96,14 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
     }
     [ServerRpc(RequireOwnership = false)]
-    void HanldeOnCuttingProgressDoneServerRpc()
+    void HandleOnCuttingProgressDoneServerRpc()
     {
+        if (HasKitchenObject())
+        {
+            if (!HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())) return;
+            CutObjectServerRpc();
+            HandleOnCuttingProgressDoneServerRpc();
+        }
         CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
         if (cuttingProgress >= cuttingRecipeSO.cuttingProgressMax)
         {

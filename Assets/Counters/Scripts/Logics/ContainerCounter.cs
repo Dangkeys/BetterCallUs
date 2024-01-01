@@ -13,13 +13,13 @@ public class ContainerCounter : BaseCounter
             if (player.HasKitchenObject())
                 TryHandlePlate(player);
             else
-                GetKitchenObject().SetKitchenObjectParent(player);
+                GetKitchenObject().Net_SetKitchenObjectParent(player);
         }
         else
         {
             if (player.HasKitchenObject())
             {
-                player.GetKitchenObject().SetKitchenObjectParent(this);
+                player.GetKitchenObject().Net_SetKitchenObjectParent(this);
             }
             else
             {

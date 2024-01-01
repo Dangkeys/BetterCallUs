@@ -15,10 +15,10 @@ public class ClearCounter : BaseCounter
                 TryHandlePlate(player);
             }
             else
-                GetKitchenObject().SetKitchenObjectParent(player);
+                GetKitchenObject().Net_SetKitchenObjectParent(player);
         }else{
             if(!player.HasKitchenObject()) return;
-            player.GetKitchenObject().SetKitchenObjectParent(this);
+            player.GetKitchenObject().Net_SetKitchenObjectParent(this);
         }
     }
 }

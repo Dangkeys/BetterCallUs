@@ -65,7 +65,7 @@ public class KitchenObject : NetworkBehaviour
     {
         return kitchenObjectSO;
     }
-    public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
+    public void Net_SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
     {
         SetKitchenObjectParentServerRpc(kitchenObjectParent.GetNetworkObject());
     }
