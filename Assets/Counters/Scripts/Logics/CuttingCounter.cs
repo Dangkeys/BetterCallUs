@@ -101,8 +101,6 @@ public class CuttingCounter : BaseCounter, IHasProgress
         if (HasKitchenObject())
         {
             if (!HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())) return;
-            CutObjectServerRpc();
-            HandleOnCuttingProgressDoneServerRpc();
         }
         CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
         if (cuttingProgress >= cuttingRecipeSO.cuttingProgressMax)

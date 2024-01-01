@@ -11,6 +11,7 @@ public class KitchenGameMultiplayer : NetworkBehaviour
 {
     public const int MAX_PLAYER_AMOUNT = 4;
     private const string PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER = "PlayerNameMultiplayer";
+    public static bool playMultiplayer = true;
     [SerializeField] KitchenObjectSOList kitchenObjectSOList;
     public event EventHandler OnTryingToJoinGame;
     public event EventHandler OnFailedToJoinGame;
@@ -29,6 +30,12 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         "PlayerName" + UnityEngine.Random.Range(100, 1000));
         DontDestroyOnLoad(gameObject);
         net_playerDataList.OnListChanged += Net_PlayerDataListChanged;
+    }
+    private void Start() {
+        if(playMultiplayer) return;
+        StartHost();
+        Loader.LoadNetwork(Loader.Scene.GameScene);
+        
     }
     public string GetPlayerName()
     {
@@ -135,12 +142,19 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     void SpawnKitchenObjectServerRpc(int kitchenObjectSOIndex, NetworkObjectReference parentNetworkObjectReference)
     {
         KitchenObjectSO kitchenObjectSO = GetKitchenObjectSOFromIndex(kitchenObjectSOIndex);
+        parentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
+        IKitchenObjectParent kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
+
+        if(kitchenObjectParent.HasKitchenObject())
+        {
+            //parent already spawn object
+            return;
+        }
+
         Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.GetPrefabTransform());
         NetworkObject kitchenObjectNetworkObject = kitchenObjectTransform.GetComponent<NetworkObject>();
         kitchenObjectNetworkObject.Spawn(true);
         KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
-        parentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
-        IKitchenObjectParent kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
         kitchenObject.Net_SetKitchenObjectParent(kitchenObjectParent);
     }
     public int GetKitchenObjectSOIndex(KitchenObjectSO kitchenObjectSO)
@@ -159,6 +173,7 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     void DestroyKitchenObjectServerRpc(NetworkObjectReference networkObjectReference)
     {
         networkObjectReference.TryGet(out NetworkObject networkObject);
+        if (networkObject == null) return;
         KitchenObject kitchenObject = networkObject.GetComponent<KitchenObject>();
         ClearKitchenObjectOnParentClientRpc(networkObjectReference);
         kitchenObject.DestroySelf();

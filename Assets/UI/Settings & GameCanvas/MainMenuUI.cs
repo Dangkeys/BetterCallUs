@@ -7,13 +7,23 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
-    [SerializeField] Button playButton;
+    [SerializeField] Button multiplayerButton;
+    [SerializeField] private Button singlePlayerButton;
     [SerializeField] Button quitButton;
-    private void Awake() {
-        playButton.onClick.AddListener(() => {
+    private void Awake()
+    {
+        multiplayerButton.onClick.AddListener(() =>
+        {
+            KitchenGameMultiplayer.playMultiplayer = true;
             Loader.Load(Loader.Scene.LobbyScene);
         });
-        quitButton.onClick.AddListener(() =>{
+        singlePlayerButton.onClick.AddListener(() =>
+        {
+            KitchenGameMultiplayer.playMultiplayer = false;
+            Loader.Load(Loader.Scene.LobbyScene);
+        });
+        quitButton.onClick.AddListener(() =>
+        {
             Debug.Log("Quit!!");
             Application.Quit();
         });
